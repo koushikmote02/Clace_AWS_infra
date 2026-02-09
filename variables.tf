@@ -225,3 +225,13 @@ variable "brave_search_api_key" {
   type        = string
   sensitive   = true
 }
+
+# -----------------------------------------------------------------------------
+# CORS Configuration
+# -----------------------------------------------------------------------------
+
+variable "cors_origins" {
+  description = "Comma-separated list of allowed CORS origins for the backend"
+  type        = string
+  default     = "http://localhost:1420,tauri://localhost,https://tauri.localhost"
+}

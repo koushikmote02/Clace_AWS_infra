@@ -130,6 +130,10 @@ resource "aws_ecs_task_definition" "main" {
         {
           name  = "PORT"
           value = "8080"
+        },
+        {
+          name  = "CORS_ORIGINS"
+          value = var.cors_origins
         }
       ]
 

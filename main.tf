@@ -147,6 +147,7 @@ module "ecs" {
   secrets_arns       = module.secrets.secret_arns
   log_group_name     = module.monitoring_prereq.log_group_name
   health_check_path  = var.health_check_path
+  cors_origins       = var.cors_origins
 }
 
 # -----------------------------------------------------------------------------

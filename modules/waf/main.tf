@@ -23,6 +23,8 @@ resource "aws_wafv2_web_acl" "main" {
   }
 
   # AWS Managed Rules - Common Rule Set
+  # Note: Several rules are set to COUNT mode to avoid false positives on API
+  # traffic (large JSON bodies, streaming requests, etc.)
   rule {
     name     = "AWSManagedRulesCommonRuleSet"
     priority = 1
@@ -35,6 +37,35 @@ resource "aws_wafv2_web_acl" "main" {
       managed_rule_group_statement {
         name        = "AWSManagedRulesCommonRuleSet"
         vendor_name = "AWS"
+
+        # These rules commonly false-positive on API/streaming traffic
+        rule_action_override {
+          name = "SizeRestrictions_BODY"
+          action_to_use {
+            count {}
+          }
+        }
+
+        rule_action_override {
+          name = "CrossSiteScripting_BODY"
+          action_to_use {
+            count {}
+          }
+        }
+
+        rule_action_override {
+          name = "GenericRFI_BODY"
+          action_to_use {
+            count {}
+          }
+        }
+
+        rule_action_override {
+          name = "NoUserAgent_HEADER"
+          action_to_use {
+            count {}
+          }
+        }
       }
     }
 
