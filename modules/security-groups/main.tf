@@ -165,3 +165,58 @@ resource "aws_security_group_rule" "redis_egress" {
   security_group_id = aws_security_group.redis[0].id
   description       = "Allow all outbound traffic"
 }
+
+# -----------------------------------------------------------------------------
+# BTB EC2 Security Group (Conditional)
+# -----------------------------------------------------------------------------
+# Allows inbound SSH (22) from configurable CIDRs
+# Allows inbound HTTPS (8443) from configurable CIDRs
+# Allows all outbound traffic
+
+resource "aws_security_group" "btb_ec2" {
+  count = var.enable_btb_ec2 ? 1 : 0
+
+  name        = "${local.name_prefix}-btb-ec2-sg"
+  description = "Security group for btb EC2 instance"
+  vpc_id      = var.vpc_id
+
+  tags = {
+    Name = "${local.name_prefix}-btb-ec2-sg"
+  }
+}
+
+resource "aws_security_group_rule" "btb_ec2_ingress_ssh" {
+  count = var.enable_btb_ec2 ? 1 : 0
+
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = var.btb_ssh_cidr_blocks
+  security_group_id = aws_security_group.btb_ec2[0].id
+  description       = "Allow SSH from configured CIDR blocks"
+}
+
+resource "aws_security_group_rule" "btb_ec2_ingress_https" {
+  count = var.enable_btb_ec2 ? 1 : 0
+
+  type              = "ingress"
+  from_port         = 8443
+  to_port           = 8443
+  protocol          = "tcp"
+  cidr_blocks       = var.btb_https_cidr_blocks
+  security_group_id = aws_security_group.btb_ec2[0].id
+  description       = "Allow HTTPS on port 8443 from configured CIDR blocks"
+}
+
+resource "aws_security_group_rule" "btb_ec2_egress" {
+  count = var.enable_btb_ec2 ? 1 : 0
+
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.btb_ec2[0].id
+  description       = "Allow all outbound traffic"
+}

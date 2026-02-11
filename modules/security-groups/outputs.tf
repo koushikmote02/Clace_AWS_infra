@@ -21,3 +21,8 @@ output "redis_security_group_id" {
   description = "ID of the Redis security group (null if Redis is disabled)"
   value       = var.enable_redis ? aws_security_group.redis[0].id : null
 }
+
+output "btb_ec2_security_group_id" {
+  description = "ID of the btb EC2 security group (null if btb EC2 is disabled)"
+  value       = var.enable_btb_ec2 ? aws_security_group.btb_ec2[0].id : null
+}

@@ -235,3 +235,62 @@ variable "cors_origins" {
   type        = string
   default     = "http://localhost:1420,tauri://localhost,https://tauri.localhost"
 }
+
+# -----------------------------------------------------------------------------
+# BTB EC2 Configuration
+# -----------------------------------------------------------------------------
+
+variable "enable_btb_ec2" {
+  description = "Enable btb-service EC2 instance and related resources"
+  type        = bool
+  default     = false
+}
+
+variable "btb_instance_type" {
+  description = "EC2 instance type for btb-service"
+  type        = string
+  default     = "t3.medium"
+}
+
+variable "btb_root_volume_size" {
+  description = "Root EBS volume size in GB for btb-service EC2 instance"
+  type        = number
+  default     = 50
+}
+
+variable "btb_ssh_public_key" {
+  description = "SSH public key for btb-service EC2 instance access (creates a new key pair)"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "btb_key_pair_name" {
+  description = "Existing AWS key pair name for btb-service EC2 instance (used if btb_ssh_public_key is empty)"
+  type        = string
+  default     = ""
+}
+
+variable "btb_ssh_cidr_blocks" {
+  description = "CIDR blocks allowed for SSH access to btb-service EC2 instance"
+  type        = list(string)
+  default     = []
+}
+
+variable "btb_https_cidr_blocks" {
+  description = "CIDR blocks allowed for HTTPS (port 8443) access to btb-service EC2 instance"
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "btb_repo_url" {
+  description = "Git repository URL for btb (used in user_data provisioning)"
+  type        = string
+  default     = ""
+}
+
+variable "btb_enable_user_data" {
+  description = "Enable automated provisioning via EC2 user_data on first boot"
+  type        = bool
+  default     = false
+}

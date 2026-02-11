@@ -24,10 +24,13 @@ module "vpc" {
 module "security_groups" {
   source = "./modules/security-groups"
 
-  project_name = var.project_name
-  environment  = var.environment
-  vpc_id       = module.vpc.vpc_id
-  enable_redis = var.enable_redis
+  project_name          = var.project_name
+  environment           = var.environment
+  vpc_id                = module.vpc.vpc_id
+  enable_redis          = var.enable_redis
+  enable_btb_ec2        = var.enable_btb_ec2
+  btb_ssh_cidr_blocks   = var.btb_ssh_cidr_blocks
+  btb_https_cidr_blocks = var.btb_https_cidr_blocks
 }
 
 # -----------------------------------------------------------------------------
@@ -175,4 +178,37 @@ module "waf" {
   environment  = var.environment
   alb_arn      = module.alb.alb_arn
   rate_limit   = var.waf_rate_limit
+}
+
+# -----------------------------------------------------------------------------
+# BTB IAM Module (Conditional)
+# -----------------------------------------------------------------------------
+
+module "btb_iam" {
+  source = "./modules/btb-iam"
+  count  = var.enable_btb_ec2 ? 1 : 0
+
+  project_name = var.project_name
+  environment  = var.environment
+}
+
+# -----------------------------------------------------------------------------
+# BTB EC2 Module (Conditional)
+# -----------------------------------------------------------------------------
+
+module "btb_ec2" {
+  source = "./modules/btb-ec2"
+  count  = var.enable_btb_ec2 ? 1 : 0
+
+  project_name          = var.project_name
+  environment           = var.environment
+  subnet_id             = module.vpc.public_subnet_ids[0]
+  security_group_id     = module.security_groups.btb_ec2_security_group_id
+  instance_profile_name = module.btb_iam[0].instance_profile_name
+  instance_type         = var.btb_instance_type
+  root_volume_size      = var.btb_root_volume_size
+  ssh_public_key        = var.btb_ssh_public_key
+  key_pair_name         = var.btb_key_pair_name
+  btb_repo_url          = var.btb_repo_url
+  enable_user_data      = var.btb_enable_user_data
 }

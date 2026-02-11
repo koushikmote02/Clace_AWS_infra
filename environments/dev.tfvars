@@ -49,3 +49,20 @@ log_retention_days = 30
 # TF_VAR_stripe_secret_key
 # TF_VAR_stripe_webhook_secret
 # TF_VAR_brave_search_api_key
+
+# -----------------------------------------------------------------------------
+# BTB EC2 Configuration - Disabled by default
+# -----------------------------------------------------------------------------
+# Uncomment and configure the following to deploy the btb-service EC2 instance.
+# At minimum, set enable_btb_ec2 = true and provide SSH access via either
+# btb_ssh_public_key or btb_key_pair_name, plus btb_ssh_cidr_blocks.
+# -----------------------------------------------------------------------------
+
+enable_btb_ec2        = true
+btb_instance_type     = "t3.medium"
+btb_root_volume_size  = 50
+btb_ssh_cidr_blocks   = ["0.0.0.0/0"]          # Open for now, restrict later
+btb_https_cidr_blocks = ["0.0.0.0/0"]          # GitHub webhooks need public access
+btb_enable_user_data  = false
+
+# btb_ssh_public_key - Set via environment variable TF_VAR_btb_ssh_public_key

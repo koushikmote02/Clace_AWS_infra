@@ -118,3 +118,22 @@ output "waf_web_acl_arn" {
   description = "ARN of the WAF Web ACL"
   value       = module.waf.web_acl_arn
 }
+
+# -----------------------------------------------------------------------------
+# BTB EC2 Outputs (Conditional)
+# -----------------------------------------------------------------------------
+
+output "btb_ec2_public_ip" {
+  description = "Public IP of the btb-service EC2 instance (null if disabled)"
+  value       = var.enable_btb_ec2 ? module.btb_ec2[0].public_ip : null
+}
+
+output "btb_ec2_instance_id" {
+  description = "Instance ID of the btb-service EC2 instance (null if disabled)"
+  value       = var.enable_btb_ec2 ? module.btb_ec2[0].instance_id : null
+}
+
+output "btb_iam_role_arn" {
+  description = "ARN of the btb-service IAM role (null if disabled)"
+  value       = var.enable_btb_ec2 ? module.btb_iam[0].role_arn : null
+}
