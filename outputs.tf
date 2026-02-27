@@ -137,3 +137,37 @@ output "btb_iam_role_arn" {
   description = "ARN of the btb-service IAM role (null if disabled)"
   value       = var.enable_btb_ec2 ? module.btb_iam[0].role_arn : null
 }
+
+# -----------------------------------------------------------------------------
+# App Updates Outputs (Conditional)
+# -----------------------------------------------------------------------------
+
+output "app_updates_s3_bucket" {
+  description = "S3 bucket name for app update artifacts (null if disabled)"
+  value       = var.enable_app_updates ? module.app_updates[0].s3_bucket_name : null
+}
+
+output "app_updates_cloudfront_distribution_id" {
+  description = "CloudFront distribution ID for app updates (null if disabled)"
+  value       = var.enable_app_updates ? module.app_updates[0].cloudfront_distribution_id : null
+}
+
+output "app_updates_url" {
+  description = "URL for the app updates endpoint (null if disabled)"
+  value       = var.enable_app_updates ? module.app_updates[0].updates_url : null
+}
+
+output "app_updates_ci_role_arn" {
+  description = "IAM role ARN for GitHub Actions CI/CD (null if disabled)"
+  value       = var.enable_app_updates ? module.app_updates[0].ci_updater_role_arn : null
+}
+
+output "app_updates_cloudfront_domain" {
+  description = "CloudFront domain — CNAME updates.clace.ai to this in Porkbun (null if disabled)"
+  value       = var.enable_app_updates ? module.app_updates[0].cloudfront_domain_name : null
+}
+
+output "app_updates_acm_validation_records" {
+  description = "DNS records to add at Porkbun for ACM certificate validation (empty if disabled)"
+  value       = var.enable_app_updates ? module.app_updates[0].acm_validation_records : {}
+}

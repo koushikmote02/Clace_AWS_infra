@@ -49,3 +49,12 @@ log_retention_days = 30
 # TF_VAR_stripe_secret_key
 # TF_VAR_stripe_webhook_secret
 # TF_VAR_brave_search_api_key
+
+# -----------------------------------------------------------------------------
+# App Updates (Auto-Update CDN) Configuration
+# -----------------------------------------------------------------------------
+
+# enable_app_updates  = true
+# updates_domain_name = "updates.clace.ai"
+# github_repo         = "koushikmote02/Client"
+# enable_github_oidc  = true

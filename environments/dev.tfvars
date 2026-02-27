@@ -61,8 +61,20 @@ log_retention_days = 30
 enable_btb_ec2        = true
 btb_instance_type     = "t3.medium"
 btb_root_volume_size  = 50
-btb_ssh_cidr_blocks   = ["0.0.0.0/0"]          # Open for now, restrict later
-btb_https_cidr_blocks = ["0.0.0.0/0"]          # GitHub webhooks need public access
+btb_ssh_cidr_blocks   = ["0.0.0.0/0"] # Open for now, restrict later
+btb_https_cidr_blocks = ["0.0.0.0/0"] # GitHub webhooks need public access
 btb_enable_user_data  = false
 
 # btb_ssh_public_key - Set via environment variable TF_VAR_btb_ssh_public_key
+
+# -----------------------------------------------------------------------------
+# App Updates (Auto-Update CDN) Configuration
+# -----------------------------------------------------------------------------
+# Uncomment and configure to enable the Tauri desktop app auto-update CDN.
+# Requires a Route 53 hosted zone for the domain.
+# -----------------------------------------------------------------------------
+
+# enable_app_updates  = true
+# updates_domain_name = "updates.clace.ai"
+# github_repo         = "koushikmote02/Client"
+# enable_github_oidc  = true

@@ -186,6 +186,9 @@ resource "aws_ecs_service" "main" {
     container_port   = 8080
   }
 
+  # Enable ECS Exec for interactive commands (e.g., database access)
+  enable_execute_command = true
+
   # Deployment configuration
   deployment_maximum_percent         = 200
   deployment_minimum_healthy_percent = 100

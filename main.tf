@@ -212,3 +212,25 @@ module "btb_ec2" {
   btb_repo_url          = var.btb_repo_url
   enable_user_data      = var.btb_enable_user_data
 }
+
+# -----------------------------------------------------------------------------
+# App Updates Module (Conditional) - S3 + CloudFront + ACM + DNS + IAM
+# -----------------------------------------------------------------------------
+
+module "app_updates" {
+  source = "./modules/app-updates"
+  count  = var.enable_app_updates ? 1 : 0
+
+  providers = {
+    aws           = aws
+    aws.us_east_1 = aws.us_east_1
+  }
+
+  project_name              = var.project_name
+  environment               = var.environment
+  updates_domain_name       = var.updates_domain_name
+  github_repo               = var.github_repo
+  enable_github_oidc        = var.enable_github_oidc
+  github_oidc_provider_arn  = var.github_oidc_provider_arn
+  acm_certificate_validated = var.acm_certificate_validated
+}

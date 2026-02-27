@@ -294,3 +294,43 @@ variable "btb_enable_user_data" {
   type        = bool
   default     = false
 }
+
+# -----------------------------------------------------------------------------
+# App Updates (Auto-Update CDN) Configuration
+# -----------------------------------------------------------------------------
+
+variable "enable_app_updates" {
+  description = "Enable the app auto-update infrastructure (S3 + CloudFront + ACM + DNS + IAM)"
+  type        = bool
+  default     = false
+}
+
+variable "updates_domain_name" {
+  description = "Custom domain name for the updates CDN (e.g., updates.clace.ai)"
+  type        = string
+  default     = ""
+}
+
+variable "github_repo" {
+  description = "GitHub repository in format 'owner/repo' for OIDC trust policy"
+  type        = string
+  default     = "koushikmote02/Client"
+}
+
+variable "enable_github_oidc" {
+  description = "Whether to create GitHub OIDC provider (set false if already exists in account)"
+  type        = bool
+  default     = true
+}
+
+variable "github_oidc_provider_arn" {
+  description = "ARN of existing GitHub OIDC provider (used when enable_github_oidc is false)"
+  type        = string
+  default     = ""
+}
+
+variable "acm_certificate_validated" {
+  description = "Set to true after the ACM cert is validated in Porkbun, to attach custom domain to CloudFront"
+  type        = bool
+  default     = false
+}

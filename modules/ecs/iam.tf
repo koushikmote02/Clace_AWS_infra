@@ -113,7 +113,6 @@ resource "aws_iam_role" "ecs_task" {
 }
 
 # Task role policy for application permissions
-# Add additional permissions here as needed by the application
 resource "aws_iam_role_policy" "ecs_task" {
   name = "${local.name_prefix}-ecs-task-policy"
   role = aws_iam_role.ecs_task.id
@@ -126,6 +125,16 @@ resource "aws_iam_role_policy" "ecs_task" {
         Action = [
           "logs:CreateLogStream",
           "logs:PutLogEvents"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ssmmessages:CreateControlChannel",
+          "ssmmessages:CreateDataChannel",
+          "ssmmessages:OpenControlChannel",
+          "ssmmessages:OpenDataChannel"
         ]
         Resource = "*"
       }
