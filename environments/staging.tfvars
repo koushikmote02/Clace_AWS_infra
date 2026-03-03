@@ -56,5 +56,5 @@ log_retention_days = 30
 
 # enable_app_updates  = true
 # updates_domain_name = "updates.clace.ai"
-# github_repo         = "koushikmote02/Client"
+# github_repos         = ["joshkatt/Client", "koushikmote02/Client"]
 # enable_github_oidc  = true

@@ -10,7 +10,7 @@ address.txt
 *.tfplan
 crash.log
 crash.*.log
-
+AWS_env.txt
 # Override files
 override.tf
 override.tf.json

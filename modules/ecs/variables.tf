@@ -74,6 +74,7 @@ variable "secrets_arns" {
     stripe_secret_key         = string
     stripe_webhook_secret     = string
     brave_search_api_key      = string
+    anthropic_api_key         = optional(string)
   })
 }
 
@@ -90,6 +91,46 @@ variable "health_check_path" {
 
 variable "cors_origins" {
   description = "Comma-separated list of allowed CORS origins"
+  type        = string
+  default     = ""
+}
+
+variable "stripe_trial_period_days" {
+  description = "Number of days for Stripe free trial period"
+  type        = number
+  default     = 30
+}
+
+variable "stripe_account_id" {
+  description = "Stripe account ID"
+  type        = string
+  default     = ""
+}
+
+variable "stripe_success_url" {
+  description = "URL to redirect to after successful Stripe checkout"
+  type        = string
+}
+
+variable "stripe_cancel_url" {
+  description = "URL to redirect to after cancelled Stripe checkout"
+  type        = string
+}
+
+variable "stripe_price_p1" {
+  description = "Stripe Price ID for Plan 1 (Pro)"
+  type        = string
+  default     = ""
+}
+
+variable "stripe_price_p2" {
+  description = "Stripe Price ID for Plan 2 (Enterprise)"
+  type        = string
+  default     = ""
+}
+
+variable "supabase_project_url" {
+  description = "Original Supabase project URL for JWT issuer validation (e.g., https://xxx.supabase.co)"
   type        = string
   default     = ""
 }

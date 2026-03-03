@@ -110,6 +110,7 @@ module "secrets" {
   stripe_secret_key         = var.stripe_secret_key
   stripe_webhook_secret     = var.stripe_webhook_secret
   brave_search_api_key      = var.brave_search_api_key
+  anthropic_api_key         = var.anthropic_api_key
 }
 
 # -----------------------------------------------------------------------------
@@ -150,7 +151,14 @@ module "ecs" {
   secrets_arns       = module.secrets.secret_arns
   log_group_name     = module.monitoring_prereq.log_group_name
   health_check_path  = var.health_check_path
-  cors_origins       = var.cors_origins
+  cors_origins            = var.cors_origins
+  stripe_success_url      = var.stripe_success_url
+  stripe_cancel_url       = var.stripe_cancel_url
+  stripe_trial_period_days = var.stripe_trial_period_days
+  stripe_account_id        = var.stripe_account_id
+  stripe_price_p1          = var.stripe_price_p1
+  stripe_price_p2          = var.stripe_price_p2
+  supabase_project_url     = var.supabase_project_url
 }
 
 # -----------------------------------------------------------------------------
@@ -229,7 +237,7 @@ module "app_updates" {
   project_name              = var.project_name
   environment               = var.environment
   updates_domain_name       = var.updates_domain_name
-  github_repo               = var.github_repo
+  github_repos              = var.github_repos
   enable_github_oidc        = var.enable_github_oidc
   github_oidc_provider_arn  = var.github_oidc_provider_arn
   acm_certificate_validated = var.acm_certificate_validated

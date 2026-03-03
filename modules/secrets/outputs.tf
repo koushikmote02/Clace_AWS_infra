@@ -15,6 +15,7 @@ output "secret_arns" {
     stripe_secret_key         = aws_secretsmanager_secret.stripe_secret_key.arn
     stripe_webhook_secret     = aws_secretsmanager_secret.stripe_webhook_secret.arn
     brave_search_api_key      = aws_secretsmanager_secret.brave_search_api_key.arn
+    anthropic_api_key         = var.anthropic_api_key != "" ? aws_secretsmanager_secret.anthropic_api_key[0].arn : null
   }
 }
 

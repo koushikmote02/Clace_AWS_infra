@@ -1,0 +1,113 @@
+# -----------------------------------------------------------------------------
+# Upload Desktop App Binaries to S3
+# -----------------------------------------------------------------------------
+# Triggered on GitHub release publish. Downloads the .exe and .dmg assets
+# from the release, uploads them to S3, and invalidates CloudFront cache.
+#
+# The binaries are then publicly accessible via CloudFront:
+#   https://updates.clace.ai/downloads/Clace_<version>_x64-setup.exe
+#   https://updates.clace.ai/downloads/Clace_<version>_aarch64.dmg
+#   https://updates.clace.ai/downloads/latest/Clace-latest-setup.exe
+#   https://updates.clace.ai/downloads/latest/Clace-latest.dmg
+# -----------------------------------------------------------------------------
+
+name: Upload Binaries to S3
+
+on:
+  release:
+    types: [published]
+
+  # Allow manual trigger for re-uploading
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to upload (e.g., v0.2.0)"
+        required: true
+        type: string
+
+permissions:
+  id-token: write   # Required for OIDC
+  contents: read     # Required to download release assets
+
+env:
+  S3_BUCKET: clace-app-updates
+  CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+  AWS_REGION: us-east-2
+  AWS_ROLE_ARN: ${{ secrets.AWS_CI_ROLE_ARN }}
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine release tag
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Download release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          mkdir -p artifacts
+          # Download all .exe and .dmg files from the release
+          gh release download "$TAG" \
+            --repo "${{ github.repository }}" \
+            --pattern "*.exe" \
+            --pattern "*.dmg" \
+            --dir artifacts/ || true
+
+          echo "Downloaded artifacts:"
+          ls -la artifacts/
+
+      - name: Upload versioned binaries to S3
+        env:
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          # Strip leading 'v' from tag for folder name (v0.2.0 -> 0.2.0)
+          VERSION="${TAG#v}"
+
+          # Upload each binary to versioned path
+          for file in artifacts/*; do
+            [ -f "$file" ] || continue
+            filename=$(basename "$file")
+            echo "Uploading $filename to downloads/$VERSION/"
+            aws s3 cp "$file" "s3://$S3_BUCKET/downloads/$VERSION/$filename" \
+              --content-disposition "attachment; filename=\"$filename\""
+          done
+
+      - name: Upload latest binaries to S3
+        run: |
+          # Copy binaries to downloads/latest/ with generic names for stable links
+          for file in artifacts/*; do
+            [ -f "$file" ] || continue
+            filename=$(basename "$file")
+
+            if [[ "$filename" == *.exe ]]; then
+              LATEST_NAME="Clace-latest-setup.exe"
+            elif [[ "$filename" == *.dmg ]]; then
+              LATEST_NAME="Clace-latest.dmg"
+            else
+              continue
+            fi
+
+            echo "Uploading $filename as downloads/latest/$LATEST_NAME"
+            aws s3 cp "$file" "s3://$S3_BUCKET/downloads/latest/$LATEST_NAME" \
+              --content-disposition "attachment; filename=\"$LATEST_NAME\""
+          done
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
+            --paths "/downloads/*"

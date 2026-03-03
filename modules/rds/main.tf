@@ -46,6 +46,11 @@ resource "aws_db_parameter_group" "main" {
   description = "PostgreSQL parameter group for ${local.name_prefix}"
 
   parameter {
+    name  = "rds.force_ssl"
+    value = "1"
+  }
+
+  parameter {
     name  = "log_connections"
     value = "1"
   }

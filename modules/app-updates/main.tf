@@ -217,7 +217,7 @@ resource "aws_iam_role" "ci_updater" {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
           }
           StringLike = {
-            "token.actions.githubusercontent.com:sub" = "repo:${var.github_repo}:*"
+            "token.actions.githubusercontent.com:sub" = [for repo in var.github_repos : "repo:${repo}:*"]
           }
         }
       }

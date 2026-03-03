@@ -56,8 +56,16 @@ locals {
     }
   ] : []
 
+  # Anthropic secret (conditional)
+  anthropic_secret = var.secrets_arns.anthropic_api_key != null ? [
+    {
+      name      = "ANTHROPIC_API_KEY"
+      valueFrom = var.secrets_arns.anthropic_api_key
+    }
+  ] : []
+
   # Combined secrets
-  all_secrets = concat(local.base_secrets, local.redis_secret)
+  all_secrets = concat(local.base_secrets, local.redis_secret, local.anthropic_secret)
 }
 
 # -----------------------------------------------------------------------------
@@ -134,6 +142,34 @@ resource "aws_ecs_task_definition" "main" {
         {
           name  = "CORS_ORIGINS"
           value = var.cors_origins
+        },
+        {
+          name  = "STRIPE_SUCCESS_URL"
+          value = var.stripe_success_url
+        },
+        {
+          name  = "STRIPE_CANCEL_URL"
+          value = var.stripe_cancel_url
+        },
+        {
+          name  = "STRIPE_TRIAL_PERIOD_DAYS"
+          value = tostring(var.stripe_trial_period_days)
+        },
+        {
+          name  = "STRIPE_ACCOUNT_ID"
+          value = var.stripe_account_id
+        },
+        {
+          name  = "STRIPE_PRICE_P1"
+          value = var.stripe_price_p1
+        },
+        {
+          name  = "STRIPE_PRICE_P2"
+          value = var.stripe_price_p2
+        },
+        {
+          name  = "SUPABASE_PROJECT_URL"
+          value = var.supabase_project_url
         }
       ]
 

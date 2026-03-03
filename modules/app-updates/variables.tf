@@ -26,10 +26,10 @@ variable "updates_domain_name" {
   type        = string
 }
 
-variable "github_repo" {
-  description = "GitHub repository in format 'owner/repo' for OIDC trust policy"
-  type        = string
-  default     = "koushikmote02/Client"
+variable "github_repos" {
+  description = "List of GitHub repositories in format 'owner/repo' for OIDC trust policy"
+  type        = list(string)
+  default     = ["koushikmote02/Client"]
 }
 
 variable "enable_github_oidc" {

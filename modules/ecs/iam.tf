@@ -65,6 +65,27 @@ resource "aws_iam_role_policy" "ecs_execution_secrets" {
   })
 }
 
+# Additional policy for Anthropic API key secret (conditional)
+resource "aws_iam_role_policy" "ecs_execution_anthropic_secret" {
+  count = var.secrets_arns.anthropic_api_key != null ? 1 : 0
+
+  name = "${local.name_prefix}-ecs-execution-anthropic-secret"
+  role = aws_iam_role.ecs_execution.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:GetSecretValue"
+        ]
+        Resource = [var.secrets_arns.anthropic_api_key]
+      }
+    ]
+  })
+}
+
 # Additional policy for Redis URL secret (conditional)
 resource "aws_iam_role_policy" "ecs_execution_redis_secret" {
   count = var.secrets_arns.redis_url != null ? 1 : 0

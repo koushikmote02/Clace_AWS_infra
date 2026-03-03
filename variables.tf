@@ -179,9 +179,15 @@ variable "log_retention_days" {
 # -----------------------------------------------------------------------------
 
 variable "supabase_url" {
-  description = "Supabase project URL"
+  description = "Supabase project URL (custom domain, e.g., https://auth.clace.ai)"
   type        = string
   sensitive   = true
+}
+
+variable "supabase_project_url" {
+  description = "Original Supabase project URL for JWT issuer validation (e.g., https://xxx.supabase.co)"
+  type        = string
+  default     = ""
 }
 
 variable "supabase_anon_key" {
@@ -206,6 +212,13 @@ variable "gemini_api_key" {
   description = "Google Gemini API key"
   type        = string
   sensitive   = true
+}
+
+variable "anthropic_api_key" {
+  description = "Anthropic API key"
+  type        = string
+  sensitive   = true
+  default     = ""
 }
 
 variable "stripe_secret_key" {
@@ -233,7 +246,43 @@ variable "brave_search_api_key" {
 variable "cors_origins" {
   description = "Comma-separated list of allowed CORS origins for the backend"
   type        = string
-  default     = "http://localhost:1420,tauri://localhost,https://tauri.localhost"
+  default     = "http://localhost:1420,tauri://localhost,https://tauri.localhost,http://tauri.localhost,http://localhost:5173"
+}
+
+variable "stripe_success_url" {
+  description = "URL to redirect to after successful Stripe checkout"
+  type        = string
+  default     = "https://app.clace.ai/billing/success?session_id={CHECKOUT_SESSION_ID}"
+}
+
+variable "stripe_cancel_url" {
+  description = "URL to redirect to after cancelled Stripe checkout"
+  type        = string
+  default     = "https://app.clace.ai/billing/cancel"
+}
+
+variable "stripe_trial_period_days" {
+  description = "Number of days for Stripe free trial period"
+  type        = number
+  default     = 30
+}
+
+variable "stripe_account_id" {
+  description = "Stripe account ID"
+  type        = string
+  default     = ""
+}
+
+variable "stripe_price_p1" {
+  description = "Stripe Price ID for Plan 1 (Pro)"
+  type        = string
+  default     = ""
+}
+
+variable "stripe_price_p2" {
+  description = "Stripe Price ID for Plan 2 (Enterprise)"
+  type        = string
+  default     = ""
 }
 
 # -----------------------------------------------------------------------------
@@ -311,10 +360,10 @@ variable "updates_domain_name" {
   default     = ""
 }
 
-variable "github_repo" {
-  description = "GitHub repository in format 'owner/repo' for OIDC trust policy"
-  type        = string
-  default     = "koushikmote02/Client"
+variable "github_repos" {
+  description = "List of GitHub repositories in format 'owner/repo' for OIDC trust policy"
+  type        = list(string)
+  default     = ["koushikmote02/Client"]
 }
 
 variable "enable_github_oidc" {
