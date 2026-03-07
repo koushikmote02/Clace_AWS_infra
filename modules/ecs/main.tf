@@ -43,7 +43,7 @@ locals {
       valueFrom = var.secrets_arns.stripe_webhook_secret
     },
     {
-      name      = "BRAVE_SEARCH_API_KEY"
+      name      = "BRAVE_API_KEY"
       valueFrom = var.secrets_arns.brave_search_api_key
     }
   ]
