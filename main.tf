@@ -222,6 +222,18 @@ module "btb_ec2" {
 }
 
 # -----------------------------------------------------------------------------
+# Monitoring IAM Module - Dashboard user with read-only access
+# -----------------------------------------------------------------------------
+
+module "monitoring_iam" {
+  source = "./modules/monitoring-iam"
+
+  project_name        = var.project_name
+  environment         = var.environment
+  alb_logs_bucket_arn = module.monitoring_prereq.alb_logs_bucket_arn
+}
+
+# -----------------------------------------------------------------------------
 # App Updates Module (Conditional) - S3 + CloudFront + ACM + DNS + IAM
 # -----------------------------------------------------------------------------
 

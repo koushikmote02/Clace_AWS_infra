@@ -139,6 +139,26 @@ output "btb_iam_role_arn" {
 }
 
 # -----------------------------------------------------------------------------
+# Monitoring IAM Outputs
+# -----------------------------------------------------------------------------
+
+output "monitoring_iam_user_name" {
+  description = "Name of the monitoring IAM user"
+  value       = module.monitoring_iam.iam_user_name
+}
+
+output "monitoring_access_key_id" {
+  description = "AWS Access Key ID for the monitoring user"
+  value       = module.monitoring_iam.access_key_id
+}
+
+output "monitoring_secret_access_key" {
+  description = "AWS Secret Access Key for the monitoring user (use: terraform output -raw monitoring_secret_access_key)"
+  value       = module.monitoring_iam.secret_access_key
+  sensitive   = true
+}
+
+# -----------------------------------------------------------------------------
 # App Updates Outputs (Conditional)
 # -----------------------------------------------------------------------------
 
