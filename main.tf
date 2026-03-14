@@ -182,10 +182,12 @@ module "monitoring_alarms" {
 module "waf" {
   source = "./modules/waf"
 
-  project_name = var.project_name
-  environment  = var.environment
-  alb_arn      = module.alb.alb_arn
-  rate_limit   = var.waf_rate_limit
+  project_name          = var.project_name
+  environment           = var.environment
+  alb_arn               = module.alb.alb_arn
+  rate_limit            = var.waf_rate_limit
+  geo_restrict_enabled  = var.waf_geo_restrict_enabled
+  allowed_country_codes = var.waf_allowed_country_codes
 }
 
 # -----------------------------------------------------------------------------

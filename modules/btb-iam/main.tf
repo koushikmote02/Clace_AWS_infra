@@ -58,6 +58,69 @@ resource "aws_iam_role_policy" "btb_bedrock" {
 }
 
 # -----------------------------------------------------------------------------
+# CodeDeploy Inline Policy
+# -----------------------------------------------------------------------------
+
+resource "aws_iam_role_policy" "btb_codedeploy" {
+  name = "${local.name_prefix}-btb-codedeploy-policy"
+  role = aws_iam_role.btb_service.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "codedeploy-commands-secure:GetDeploymentSpecification",
+          "codedeploy-commands-secure:PollHostCommand",
+          "codedeploy-commands-secure:PutHostCommandAcknowledgement",
+          "codedeploy-commands-secure:PutHostCommandComplete"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:GetBucketLocation",
+          "s3:ListBucket"
+        ]
+        Resource = [
+          "arn:aws:s3:::aws-codedeploy-*",
+          "arn:aws:s3:::aws-codedeploy-*/*"
+        ]
+      }
+    ]
+  })
+}
+
+# -----------------------------------------------------------------------------
+# CodeCommit Inline Policy
+# -----------------------------------------------------------------------------
+
+resource "aws_iam_role_policy" "btb_codecommit" {
+  name = "${local.name_prefix}-btb-codecommit-policy"
+  role = aws_iam_role.btb_service.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "codecommit:GitPull",
+          "codecommit:GetRepository",
+          "codecommit:GetBranch",
+          "codecommit:ListRepositories",
+          "codecommit:BatchGetRepositories"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# -----------------------------------------------------------------------------
 # Instance Profile
 # -----------------------------------------------------------------------------
 

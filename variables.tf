@@ -164,6 +164,18 @@ variable "waf_rate_limit" {
   default     = 2000
 }
 
+variable "waf_geo_restrict_enabled" {
+  description = "Enable WAF geo-restriction to block traffic from outside allowed countries"
+  type        = bool
+  default     = false
+}
+
+variable "waf_allowed_country_codes" {
+  description = "ISO 3166-1 alpha-2 country codes to allow when geo-restriction is enabled"
+  type        = list(string)
+  default     = ["US", "CA", "MX"]
+}
+
 # -----------------------------------------------------------------------------
 # Monitoring Configuration
 # -----------------------------------------------------------------------------

@@ -22,3 +22,15 @@ variable "rate_limit" {
   type        = number
   default     = 2000
 }
+
+variable "geo_restrict_enabled" {
+  description = "Enable geo-restriction to allowed countries only"
+  type        = bool
+  default     = false
+}
+
+variable "allowed_country_codes" {
+  description = "List of ISO 3166-1 alpha-2 country codes to allow (blocks all others when geo_restrict_enabled is true)"
+  type        = list(string)
+  default     = ["US", "CA", "MX"]
+}

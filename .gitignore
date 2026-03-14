@@ -8,6 +8,7 @@ address.txt
 *.tfstate
 *.tfstate.*
 *.tfplan
+tfplan
 crash.log
 crash.*.log
 AWS_env.txt

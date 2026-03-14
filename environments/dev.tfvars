@@ -30,7 +30,9 @@ enable_redis    = false
 redis_node_type = "cache.t3.micro"
 
 # WAF Configuration
-waf_rate_limit = 2000
+waf_rate_limit            = 2000
+waf_geo_restrict_enabled  = true
+waf_allowed_country_codes = ["US", "CA", "MX"]
 
 # Monitoring Configuration
 log_retention_days = 30
@@ -61,8 +63,8 @@ log_retention_days = 30
 enable_btb_ec2        = true
 btb_instance_type     = "t3.medium"
 btb_root_volume_size  = 50
-btb_ssh_cidr_blocks   = ["0.0.0.0/0"] # Open for now, restrict later
-btb_https_cidr_blocks = ["0.0.0.0/0"] # GitHub webhooks need public access
+btb_ssh_cidr_blocks   = ["142.167.95.48/32"] # Restricted to admin device only
+btb_https_cidr_blocks = ["0.0.0.0/0"]         # Open for GitHub webhook delivery
 btb_enable_user_data  = false
 
 # btb_ssh_public_key - Set via environment variable TF_VAR_btb_ssh_public_key
