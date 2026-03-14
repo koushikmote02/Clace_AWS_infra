@@ -63,7 +63,7 @@ log_retention_days = 30
 enable_btb_ec2        = true
 btb_instance_type     = "t3.medium"
 btb_root_volume_size  = 50
-btb_ssh_cidr_blocks   = ["142.167.95.48/32"] # Restricted to admin device only
+btb_ssh_cidr_blocks   = ["209.205.254.2/32"] # Restricted to admin device only
 btb_https_cidr_blocks = ["0.0.0.0/0"]         # Open for GitHub webhook delivery
 btb_enable_user_data  = false
 
