@@ -35,6 +35,8 @@ resource "aws_security_group" "ehl" {
 }
 
 resource "aws_security_group_rule" "ehl_ingress_ssh" {
+  count = length(var.ssh_cidr_blocks) > 0 ? 1 : 0
+
   type              = "ingress"
   from_port         = 22
   to_port           = 22
