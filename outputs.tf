@@ -191,3 +191,37 @@ output "app_updates_acm_validation_records" {
   description = "DNS records to add at Porkbun for ACM certificate validation (empty if disabled)"
   value       = var.enable_app_updates ? module.app_updates[0].acm_validation_records : {}
 }
+
+# -----------------------------------------------------------------------------
+# MGN Outputs (Conditional)
+# -----------------------------------------------------------------------------
+
+output "mgn_agent_access_key_id" {
+  description = "Access key ID for MGN agent installation on source instances (null if disabled)"
+  value       = var.enable_mgn ? module.mgn[0].agent_access_key_id : null
+}
+
+output "mgn_agent_secret_access_key" {
+  description = "Secret access key for MGN agent (use: terraform output -raw mgn_agent_secret_access_key)"
+  value       = var.enable_mgn ? module.mgn[0].agent_secret_access_key : null
+  sensitive   = true
+}
+
+output "mgn_replication_security_group_id" {
+  description = "Security group ID for MGN replication servers (null if disabled)"
+  value       = var.enable_mgn ? module.mgn[0].replication_security_group_id : null
+}
+
+# -----------------------------------------------------------------------------
+# EHL Benchmark Outputs (Conditional)
+# -----------------------------------------------------------------------------
+
+output "ehl_benchmark_instance_id" {
+  description = "Instance ID of the EHL Benchmark EC2 instance (null if disabled)"
+  value       = var.enable_ehl_benchmark ? module.ehl_benchmark[0].instance_id : null
+}
+
+output "ehl_benchmark_public_ip" {
+  description = "Public IP of the EHL Benchmark EC2 instance (null if disabled)"
+  value       = var.enable_ehl_benchmark ? module.ehl_benchmark[0].public_ip : null
+}

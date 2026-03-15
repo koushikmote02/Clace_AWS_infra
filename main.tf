@@ -236,6 +236,39 @@ module "monitoring_iam" {
 }
 
 # -----------------------------------------------------------------------------
+# MGN (Application Migration Service) Module (Conditional)
+# -----------------------------------------------------------------------------
+
+module "mgn" {
+  source = "./modules/mgn"
+  count  = var.enable_mgn ? 1 : 0
+
+  project_name     = var.project_name
+  environment      = var.environment
+  vpc_id           = module.vpc.vpc_id
+  admin_cidr_blocks = var.mgn_admin_cidr_blocks
+}
+
+# -----------------------------------------------------------------------------
+# EHL Benchmark Module (Conditional)
+# -----------------------------------------------------------------------------
+
+module "ehl_benchmark" {
+  source = "./modules/ehl-benchmark"
+  count  = var.enable_ehl_benchmark ? 1 : 0
+
+  project_name     = var.project_name
+  environment      = var.environment
+  vpc_id           = module.vpc.vpc_id
+  subnet_id        = module.vpc.public_subnet_ids[0]
+  instance_type    = var.ehl_instance_type
+  root_volume_size = var.ehl_root_volume_size
+  ssh_public_key   = var.ehl_ssh_public_key
+  key_pair_name    = var.ehl_key_pair_name
+  ssh_cidr_blocks  = var.ehl_ssh_cidr_blocks
+}
+
+# -----------------------------------------------------------------------------
 # App Updates Module (Conditional) - S3 + CloudFront + ACM + DNS + IAM
 # -----------------------------------------------------------------------------
 

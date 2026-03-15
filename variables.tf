@@ -395,3 +395,60 @@ variable "acm_certificate_validated" {
   type        = bool
   default     = false
 }
+
+# -----------------------------------------------------------------------------
+# MGN (Application Migration Service) Configuration
+# -----------------------------------------------------------------------------
+
+variable "enable_mgn" {
+  description = "Enable AWS MGN prerequisites (IAM roles, security groups) for EC2 migration"
+  type        = bool
+  default     = false
+}
+
+variable "mgn_admin_cidr_blocks" {
+  description = "CIDR blocks allowed for SSH access to migrated instances"
+  type        = list(string)
+  default     = []
+}
+
+# -----------------------------------------------------------------------------
+# EHL Benchmark Configuration
+# -----------------------------------------------------------------------------
+
+variable "enable_ehl_benchmark" {
+  description = "Enable EHL Benchmark EC2 instance (r6i.12xlarge, 48 vCPU, 384 GB)"
+  type        = bool
+  default     = false
+}
+
+variable "ehl_instance_type" {
+  description = "EC2 instance type for EHL Benchmark"
+  type        = string
+  default     = "r6i.12xlarge"
+}
+
+variable "ehl_root_volume_size" {
+  description = "Root EBS volume size in GB for EHL Benchmark"
+  type        = number
+  default     = 100
+}
+
+variable "ehl_ssh_public_key" {
+  description = "SSH public key for EHL Benchmark instance"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "ehl_key_pair_name" {
+  description = "Existing key pair name for EHL Benchmark instance"
+  type        = string
+  default     = ""
+}
+
+variable "ehl_ssh_cidr_blocks" {
+  description = "CIDR blocks allowed for SSH access to EHL Benchmark instance"
+  type        = list(string)
+  default     = []
+}
