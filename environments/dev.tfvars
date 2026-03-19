@@ -93,5 +93,5 @@ mgn_admin_cidr_blocks = ["209.205.254.2/32"]
 enable_ehl_benchmark = true
 ehl_instance_type    = "r6i.12xlarge"
 ehl_root_volume_size = 100
-ehl_ssh_cidr_blocks  = []
+ehl_ssh_cidr_blocks  = ["209.205.254.3/32"]
 # ehl_ssh_public_key - Set via environment variable TF_VAR_ehl_ssh_public_key
